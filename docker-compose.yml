@@ -1,28 +1,30 @@
 version: "3.9"
 services:
-  VulnerableApp-base:
-    build: ./base
-    image: vulnerableapp-base:local
-
-  VulnerableApp-jsp:
-    build: ./jsp
-    image: vulnerableapp-jsp:local
-
-  VulnerableApp-php:
-    build: ./php
-    image: vulnerableapp-php:local
-
-  VulnerableApp-facade:
-    build: ./facade
-    depends_on:
-      - VulnerableApp-base
-      - VulnerableApp-jsp
-      - VulnerableApp-php
-    image: vulnerableapp-facade:local
-    volumes:
-      - ./templates:/etc/nginx/templates
-    ports:
-      - "80:80"
-    environment:
-      - NGINX_HOST=foobar.com
-      - NGINX_PORT=80
+    VulnerableApp-base:
+      image: sasanlabs/owasp-vulnerableapp:unreleased
+      volumes:
+        - ./base:/home/runner/work/aihomeNodeProject/aihomeNodeProject/vulnerable-app/base
+      
+    VulnerableApp-jsp:
+      image: sasanlabs/owasp-vulnerableapp-jsp:latest
+      volumes:
+        - ./jsp:/home/runner/work/aihomeNodeProject/aihomeNodeProject/vulnerable-app/jsp
+ 
+    VulnerableApp-php:
+      image: sasanlabs/owasp-vulnerableapp-php:latest
+      volumes:
+        - ./php:/home/runner/work/aihomeNodeProject/aihomeNodeProject/vulnerable-app/php
+    
+    VulnerableApp-facade:
+      depends_on:
+        - VulnerableApp-base
+        - VulnerableApp-jsp
+        - VulnerableApp-php
+      image: sasanlabs/owasp-vulnerableapp-facade
+      volumes:
+       - ./templates:/etc/nginx/templates
+      ports:
+       - "80:80"
+      environment:
+       - NGINX_HOST=foobar.com
+       - NGINX_PORT=80
